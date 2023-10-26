@@ -1,0 +1,18 @@
+.img_logo{
+    padding-left:10px;
+    padding-right:10px
+}
+
+::ng-deep .p-menubar {
+    height: 60px;
+    padding-bottom:15px;
+    width:100%;
+    border:none;
+    border-radius: 0px;
+    z-index: 1000; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+:host ::ng-deep p-menubarsub {
+    width: 97%;
+}

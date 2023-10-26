@@ -1,0 +1,16 @@
+<div class="last_feature_container">
+    <h1 #container_title class="title_last_feature">Last feature</h1>
+   <p-timeline  [value]="events" align="alternate" styleClass="customized-timeline">
+        <ng-template pTemplate="marker" let-event>
+            <span class="custom-marker shadow" [style.backgroundColor]="event.color"></span>
+        </ng-template>
+        <ng-template pTemplate="content" let-event>
+            <p-card  [style]="{'background-color':'transparent','box-shadow':'none'}" [header]="event.title" [subheader]="event.date">
+                <img *ngIf="event.image" [src]="event.image" [alt]="event.name" width="400" class="shadow" />
+                <p style="font-size: 18px;">
+                    {{event.description}}
+                </p>
+            </p-card>
+        </ng-template>
+    </p-timeline>
+</div>

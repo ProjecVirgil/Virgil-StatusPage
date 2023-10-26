@@ -1,0 +1,15 @@
+<div class="container_main" #container_main>
+    <p-splitter [style]="{ height: '100%'} " [minSizes]="[30, 30]" layout={{layout}} #splitter_main>
+        <ng-template pTemplate>
+            <div class="center_element">
+                <app-weekly></app-weekly>
+            </div>
+        </ng-template>
+        <ng-template pTemplate>
+            <div class="center_element">
+                <app-monthly></app-monthly>
+            </div>
+        </ng-template>
+    </p-splitter>
+</div>
+

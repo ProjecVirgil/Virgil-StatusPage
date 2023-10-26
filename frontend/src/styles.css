@@ -1,0 +1,11 @@
+@import "primeng/resources/themes/soho-dark/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+
+html body{
+    margin:0px;
+    padding:0px;
+    background-color:#1d1e27;
+    scroll-behavior: smooth;
+}

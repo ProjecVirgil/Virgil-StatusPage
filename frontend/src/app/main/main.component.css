@@ -1,0 +1,42 @@
+
+.center_element{
+    /* Center vertically and horizontally */
+  width:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+
+}
+
+.container_main{
+    height: 100%;
+    margin: 4% 5% 5% 5%;
+}
+
+.container_button {
+  padding: 1%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap; /* Previene il wrapping per default */
+}
+
+/* Quando la larghezza della finestra diventa minore di 768px */
+@media (max-width: 768px) {
+  .container_button {
+    flex-direction: column; /* Cambia la direzione degli elementi da orizzontale a verticale */
+    margin:30px; /* Centra gli elementi orizzontalmente */
+  }
+}
+
+.min_button{
+  margin-left:-10px;
+  margin-top:10px
+}
+
+.outline:hover{
+  background-color:#272236;
+}
+
+

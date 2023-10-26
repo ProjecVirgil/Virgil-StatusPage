@@ -1,0 +1,7 @@
+
+
+<h1>Weekly service availability statistics:</h1>
+<h3 #api class="data" data-ref="api" [ngStyle]="{'color':takeElement(api)}"> <span class="pi pi-circle-fill"></span> Internal API: {{uptime_api}}%</h3> 
+<h3 #website data-ref="website" [ngStyle]="{'color':takeElement(website)}"><span class="pi pi-circle-fill"></span> WebSite: {{uptime_website}}%</h3>
+<h3 #ds data-ref="ds" [ngStyle]="{'color':takeElement(ds)}"><span class="pi pi-circle-fill"></span> Discord bot: {{uptime_ds}}%</h3>
+<p-chart height={{height}} width="99%" type="bar" [data]="basicData" [options]="basicOptions"></p-chart>

@@ -1,0 +1,40 @@
+.custom-marker{
+    border-radius:10px;
+    padding: 10px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.shadow{
+    border-radius: 10px;
+    -webkit-filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.6));
+    -moz-filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.6));
+    -ms-filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.6)); 
+    -o-filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.6));
+    filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.8)); 
+}
+
+.container_inplace{
+    margin:10px;
+    
+}
+
+
+.last_feature_container{
+    width:100%;
+    height:100%;
+    padding: 1% 10% 1% 10%;
+
+  }
+  
+  
+  .title_last_feature{
+    justify-content: center;
+    align-items: center;
+    display:flex;
+    margin-bottom:60px;
+    font-size:50px;
+    font-family: var(--font-family);
+  }
+
+
