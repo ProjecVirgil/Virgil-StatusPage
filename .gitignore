@@ -45,3 +45,4 @@ Thumbs.db
 
 #backend
 backend/env
+backend/status_page/db.ini
