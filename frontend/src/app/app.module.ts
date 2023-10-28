@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ChartModule } from 'primeng/chart';
+import { HttpClientModule } from '@angular/common/http';
 
 import { InputTextModule } from 'primeng/inputtext';
 import { MenubarModule } from 'primeng/menubar';
@@ -41,6 +42,7 @@ import { EntryTextComponent } from './entry-text/entry-text.component';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     MenubarModule,
     InputTextModule,
