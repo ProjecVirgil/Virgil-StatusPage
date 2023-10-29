@@ -41,11 +41,14 @@
 .DS_Store
 Thumbs.db
 
-
-
 #backend
 backend/env
 backend/status_page/db.ini
 
 #test
 test.py
+
+#pycache
+backend/status_page/status_page/__pycache__
+backend/status_page/mainapp/__pycache__
+backend/status_page/mainapp/migrations/__pycache__
