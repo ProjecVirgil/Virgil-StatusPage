@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mainapp.apps.MainappConfig'
+    'mainapp.apps.MainappConfig',
+    'rest_framework',       
 ]
 
 MIDDLEWARE = [
@@ -77,7 +78,7 @@ WSGI_APPLICATION = 'status_page.wsgi.application'
 
 
 config = configparser.ConfigParser()
-config.read('settings.ini')
+config.read('db.ini')
 
 DATABASES = {
     'default': {
