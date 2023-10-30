@@ -1,5 +1,4 @@
-"""
-WSGI config for status_page project.
+"""WSGI config for status_page project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
