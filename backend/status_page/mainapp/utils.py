@@ -28,9 +28,9 @@ def create_data(urs_service,id):
     }
     data = {
         "hour":int(formatted[2].split(":")[0]),
-        "day":int(formatted[0].split("-")[0]), #yead
+        "year":int(formatted[0].split("-")[0]), #yead
         "month":int(formatted[0].split("-")[1]), #month
-        "year":int(formatted[0].split("-")[2]), #day
+        "day":int(formatted[0].split("-")[2]), #day
         "status":result, # online/offline
         "service":id, # id of service
     }
