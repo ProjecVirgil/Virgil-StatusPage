@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mainapp.apps.MainappConfig',
-    'rest_framework',       
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -85,14 +85,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'uptime_db':{
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config['database']['MYSQLDATABASE'],
-        'USER': config['database']['MYSQLUSER'],
-        'PASSWORD': config['database']['MYSQLPASSWORD'],
-        'HOST': config['database']['MYSQLHOST'],
-        'PORT': config['database']['MYSQLPORT'],
-    }
 }
 
 '''

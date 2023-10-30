@@ -1,3 +1,4 @@
+from argparse import _AttributeHolder
 from django.db import models
 
 # Create your models here.
@@ -17,4 +18,7 @@ class ItemStatus(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
 
 
-    
+class Feature(models.Model):
+      title = models.CharField(max_length=300) #title
+      image = models.ImageField()  #image
+      description = models.CharField(max_length=3000) #description
