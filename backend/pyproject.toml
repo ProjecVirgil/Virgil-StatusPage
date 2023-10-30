@@ -1,0 +1,29 @@
+
+# ---- STANDARD CONFIG ----
+[project]
+name = "Virgil_Status-Page"
+description = "Status page for check the status of service"
+version = "v1.0.0"
+readme = "README.md"
+requires-python = ">=3.11"
+
+[project.license]
+file = "LICENSE"
+
+# ------ CONFIG OF RUFF  --------
+[tool.ruff]
+ignore = ["E501"]
+extend-include = ["*.pyw"]
+select = ["E","F","N","D","UP","PYI","SLOT","SIM","TD","FIX","W","PL"]
+exclude = [
+    ".git",
+    ".git-rewrite",
+    ".venv",
+    "__pypackages__",
+    "venv",
+]
+respect-gitignore = true
+target-version = "py311"
+
+[tool.ruff.pydocstyle]
+convention = "google"
