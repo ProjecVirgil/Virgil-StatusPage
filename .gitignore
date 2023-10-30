@@ -47,6 +47,7 @@ backend/status_page/db.ini
 
 #test
 test.py
+backend/benchmark.py
 
 #pycache
 backend/status_page/status_page/__pycache__
