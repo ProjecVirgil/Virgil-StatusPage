@@ -1,4 +1,3 @@
-from argparse import _AttributeHolder
 from django.db import models
 
 # Create your models here.
