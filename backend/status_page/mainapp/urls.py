@@ -3,5 +3,6 @@ from . import views
 
 
 urlpatterns = [
-    path('',views.getTest),
+    path('',views.getNowStatus),
+    path('service/',views.getService),
 ]
