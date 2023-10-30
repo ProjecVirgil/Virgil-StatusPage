@@ -85,21 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'uptime_db':{
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config['database']['MYSQLDATABASE'],
-        'USER': config['database']['MYSQLUSER'],
-        'PASSWORD': config['database']['MYSQLPASSWORD'],
-        'HOST': config['database']['MYSQLHOST'],
-        'PORT': config['database']['MYSQLPORT'],
-    }
 }
-
-'''
-'OPTIONS': {
-    'init_command': 'SET innodb_strict_mode=1',
-},
-'''
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
