@@ -8,13 +8,15 @@ class Service(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=20) # name of service
 
+
+
 class ItemStatus(models.Model):
     hour = models.IntegerField() #hour
     day = models.IntegerField() # day
     month = models.IntegerField() #month
     year = models.IntegerField() #yead
     status = models.BooleanField() # online/offline
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE,null=True, blank=True)
 
 
     
