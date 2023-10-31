@@ -5,6 +5,9 @@ from .serializers import ItemStatusSerializer
 from .models import ItemStatus
 from .utils import create_data
 
+TIME_DELAY = 3600
+
+
 def search_status():
     """This function create the data to insert in the DB."""
     while True:
@@ -18,7 +21,7 @@ def search_status():
                 validated_data = serializer.validated_data
                 item = ItemStatus(**validated_data)
                 item.save()
-        time.sleep(3600)
+        time.sleep(TIME_DELAY)
 
 # Avvia il task in un nuovo thread
 threading.Thread(target=search_status).start()

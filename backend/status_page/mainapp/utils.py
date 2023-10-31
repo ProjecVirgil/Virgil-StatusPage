@@ -1,5 +1,7 @@
 import requests
-from datetime import datetime
+from datetime import datetime,date
+
+from .models import ItemStatus
 
 MINVALUE = 200
 MAXVALUE = 400
@@ -42,3 +44,48 @@ def create_data(urs_service,id):
         "service":id, # id of service
     }
     return data
+
+def recover_last_day():
+    """Recover the last seven day from today.
+
+    Returns:
+        list: last seven day
+    """
+    today = int(str(date.today()).split("-")[-1])
+    list_day  = []
+    for i in range(6,-1,-1):
+        list_day.append(today - i)
+    return list_day
+
+def recover_last_day_percent(service_id):
+    """Recover the last seven percent from today."""
+    list_day = recover_last_day()
+    item_statuses = ItemStatus.objects.filter(day__in=list_day,service=service_id)
+    sorted_items = sorted(item_statuses, key=lambda item_statuses: item_statuses.day)
+
+    hashmap = {}
+    for _,item in enumerate(sorted_items):
+        if(item.day not in hashmap):
+            hashmap[item.day] = []
+        hashmap[item.day].append(item.status)
+
+    result_list = []
+    for _,value in hashmap.items():
+        result_list.append(int((sum(value)/len(value))*100))
+    # Convert the QuerySet to a list of actual objects
+    return result_list
+
+def recover_last_month_percent(service_id):
+    """Recover the last month from today."""
+    item_statuses = ItemStatus.objects.filter(month__lte=12,service=service_id)
+    sorted_items = sorted(item_statuses, key=lambda item_statuses: item_statuses.month)
+    hashmap = {}
+    for _,item in enumerate(sorted_items):
+        if(item.month not in hashmap):
+            hashmap[item.month] = []
+        hashmap[item.month].append(item.status)
+    result_list = []
+    for _,value in hashmap.items():
+        result_list.append(int((sum(value)/len(value))*100))
+    return result_list
+
