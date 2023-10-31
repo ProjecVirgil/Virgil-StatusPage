@@ -1,8 +1,9 @@
+import base64
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from mainapp.models import ItemStatus,Service
-from .serializers import ItemStatusSerializer,ServiceSerializer
+from mainapp.models import ItemStatus,Service,Feature
+from .serializers import ItemStatusSerializer,ServiceSerializer,FeatureSeralizer
 from .utils import create_data
 
 
@@ -51,3 +52,29 @@ def get_now_status(request):
         item.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_feature(request):
+    """"This feature return all the information about the new features.
+
+    Args:
+        request (_type_): request
+
+    Returns:
+        Response: A string with a 64 base
+    """
+    features = Feature.objects.all()
+
+    response_data = []
+    for obj in features:
+        with open(obj.image.path, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+
+        feature_data = { 
+            'title': obj.title,
+            'image': encoded_string,
+            'description': obj.description,
+        }
+        response_data.append(feature_data)
+
+    return Response(response_data)

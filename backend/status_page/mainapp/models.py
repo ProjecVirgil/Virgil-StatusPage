@@ -33,5 +33,5 @@ class Feature(models.Model):
         models (_type_): _description_
     """
     title = models.CharField(max_length=300) #title
-    image = models.ImageField()  #image
+    image = models.ImageField(upload_to='images/')  #image
     description = models.CharField(max_length=3000) #description
