@@ -3,8 +3,34 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from mainapp.models import ItemStatus,Service
 from .serializers import ItemStatusSerializer,ServiceSerializer
-from .utils import create_data
+from .utils import create_data,recover_last_day_percent,recover_last_month_percent
 
+@api_view(['GET'])
+def get_status(request,span:int):
+    """In this function with the correct payload it return the correct percent data.
+
+    Args:
+        span (int): The span of time to recover and get
+        request (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    services = Service.objects.all()
+    if(span == 7): #LAST 7 DAY
+        reponse_dict = {}
+        for _,element in enumerate(services):
+            list_percent = recover_last_day_percent(element.id)
+            reponse_dict[element.id] = list_percent
+        return Response({"result":reponse_dict})
+    elif(span == 12): #12 MONTH
+        reponse_dict = {}
+        for _,element in enumerate(services):
+            list_percent = recover_last_month_percent(element.id)
+            reponse_dict[element.id] = list_percent
+        return Response({"result":reponse_dict})
+    else:
+        return Response({"result":"Error in the query"})
 
 @api_view(['GET'])
 def get_service(request):
