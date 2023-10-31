@@ -1,4 +1,6 @@
 import { Component,Renderer2, HostListener} from '@angular/core';
+import { DataService } from '../data.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-weekly',
@@ -13,19 +15,39 @@ export class WeeklyComponent {
     uptime_website:number = 0
     uptime_api:number = 0
     
+    items: any = []
+    dataLoaded: boolean = false;
+
     width:number | undefined
     height:number | undefined
 
-    constructor(private renderer: Renderer2) { }
+    value_api:number | undefined
+    value_website:number | undefined
+    value_ds:number | undefined
+
+    constructor(private renderer: Renderer2,private service:DataService ) {  
+        this.service.getWeek().subscribe(
+            (data:any) => {
+              this.items = Object.keys(data).map((key) => {return data[key]});  // Qui dovresti vedere i dati JSON restituiti dal tuo endpoint
+              this.value_website = (this.items[0][1].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][1].length);
+              this.value_ds = (this.items[0][2].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][2].length);
+              this.value_api = (this.items[0][3].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][3].length);
+            },
+            error => {
+              console.error("Error!", error);
+            }
+          ); 
+    }
 
     ngOnInit() {
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+        const last_seven_day = recoverLastDay()
 
         this.basicData = {
-            labels: ['Monday', 'Tuesday','Wednesday', 'Thursday', 'Friday','Saturday','Sunday'],
+            labels: [...last_seven_day],
             datasets: [
                 {
                     label: 'Uptime in %',
@@ -105,18 +127,15 @@ export class WeeklyComponent {
     ngAfterViewInit() {
         const duration = 2000; 
         const startTime = Date.now();
-        
-        const value_api = getRandomFloat(0.0, 100.0)
-        const value_ds = getRandomFloat(0.0, 100.0)
-        const value_website = getRandomFloat(0.0, 100.0)
+
 
         const animate = () => {
           const elapsed = Date.now() - startTime;
           const t = Math.min(1, elapsed / duration);  
-      
-          this.uptime_api = Math.ceil(value_api * easeInOutSine(t)); 
-          this.uptime_ds = Math.ceil(value_ds * easeInOutSine(t)); 
-          this.uptime_website = Math.ceil(value_website * easeInOutSine(t)); 
+
+          this.uptime_api = Math.ceil(this.value_api! * easeInOutSine(t)); 
+          this.uptime_ds = Math.ceil(this.value_ds! * easeInOutSine(t)); 
+          this.uptime_website = Math.ceil(this.value_website! * easeInOutSine(t)); 
           
           if (t < 1) {
             requestAnimationFrame(animate);
@@ -206,3 +225,20 @@ function getGradient(ctx: CanvasRenderingContext2D, chartArea: { left: number, r
 function easeInOutSine(x: number): number {
     return -(Math.cos(Math.PI * x) - 1) / 2;
   }
+
+  function recoverLastDay(): number[] {
+    // Ottieni la data odierna
+    let currentDay = new Date();
+
+    const listDay: number[] = [];
+
+    for (let i = 6; i >= 0; i--) {
+        const newDate = new Date(currentDay);
+        newDate.setDate(currentDay.getDate() - i);
+        listDay.push(newDate.getDate());
+    }
+
+    return listDay;
+}
+
+
