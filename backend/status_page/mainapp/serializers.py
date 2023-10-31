@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from mainapp.models import ItemStatus,Service
+from mainapp.models import ItemStatus,Service, Feature
 
 #Trasforma la classe in un JSON
 class ItemStatusSerializer(serializers.ModelSerializer):
@@ -23,4 +23,15 @@ class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         """Data to display."""
         model = Service
+        fields = '__all__'
+
+class FeatureSeralizer(serializers.ModelSerializer):
+    """"Serializer from Feature Item.
+
+    Args:
+        serializers (serializers): the model of serializer
+    """
+    class Meta:
+        """Data to display."""
+        model = Feature
         fields = '__all__'
