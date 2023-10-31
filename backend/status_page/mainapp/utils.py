@@ -1,5 +1,5 @@
 import requests
-from datetime import datetime,date
+from datetime import datetime,date,timedelta
 
 from .models import ItemStatus
 
@@ -45,21 +45,20 @@ def create_data(urs_service,id):
     }
     return data
 
-def recover_last_day():
-    """Recover the last seven day from today.
+def recover_last_seven_days():
+    """Recover the last seven days from today.
 
     Returns:
-        list: last seven day
+        list: last seven days
     """
-    today = int(str(date.today()).split("-")[-1])
-    list_day  = []
-    for i in range(6,-1,-1):
-        list_day.append(today - i)
-    return list_day
+    today = date.today()
+    last_seven_days = [(today - timedelta(days=i)).day for i in range(7)]
+    last_seven_days.reverse()
+    return last_seven_days
 
 def recover_last_day_percent(service_id):
     """Recover the last seven percent from today."""
-    list_day = recover_last_day()
+    list_day = recover_last_seven_days()
     item_statuses = ItemStatus.objects.filter(day__in=list_day,service=service_id)
     sorted_items = sorted(item_statuses, key=lambda item_statuses: item_statuses.day)
 
