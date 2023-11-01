@@ -96,9 +96,10 @@ def get_feature(request):
         with open(obj.image.path, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
 
-        feature_data = { 
+        feature_data = {
             'title': obj.title,
             'image': encoded_string,
+            'date ': obj.date,
             'description': obj.description,
         }
         response_data.append(feature_data)
