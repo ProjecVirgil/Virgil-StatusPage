@@ -1,6 +1,5 @@
-import { Component,Renderer2, HostListener} from '@angular/core';
+import { Component} from '@angular/core';
 import { DataService } from '../data.service';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'app-weekly',
@@ -16,7 +15,6 @@ export class WeeklyComponent {
     uptime_api:number = 0
     
     items: any = []
-    dataLoaded: boolean = false;
 
     width:number | undefined
     height:number | undefined
@@ -24,34 +22,32 @@ export class WeeklyComponent {
     value_api:number | undefined
     value_website:number | undefined
     value_ds:number | undefined
+    
+    average_value_service = [];
 
-    constructor(private renderer: Renderer2,private service:DataService ) {  
-        this.service.getWeek().subscribe(
-            (data:any) => {
-              this.items = Object.keys(data).map((key) => {return data[key]});  // Qui dovresti vedere i dati JSON restituiti dal tuo endpoint
-              this.value_website = (this.items[0][1].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][1].length);
-              this.value_ds = (this.items[0][2].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][2].length);
-              this.value_api = (this.items[0][3].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][3].length);
-            },
-            error => {
-              console.error("Error!", error);
-            }
-          ); 
-    }
+    constructor(private service:DataService ) {}
 
     ngOnInit() {
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-        const last_seven_day = recoverLastDay()
 
+        this.service.getWeek().subscribe(
+            (data:any) => {
+                
+              this.items = Object.keys(data).map((key) => {return data[key]});  // Qui dovresti vedere i dati JSON restituiti dal tuo endpoint
+              this.value_website = (this.items[0][1].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][1].length);
+              this.value_ds = (this.items[0][2].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][2].length);
+              this.value_api = (this.items[0][3].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][3].length);
+              this.average_value_service = average_calculation(this.items[0])
+          const last_seven_day = recoverLastDay()
         this.basicData = {
             labels: [...last_seven_day],
             datasets: [
                 {
                     label: 'Uptime in %',
-                    data: [getRandomFloat(0.0,100.0), getRandomFloat(0.0,100.0), getRandomFloat(0.0,100.0), getRandomFloat(0.0,100.0),getRandomFloat(0.0,100.0), getRandomFloat(0.0,100.0), getRandomFloat(0.0,100.0)],
+                    data: this.average_value_service,
                     backgroundColor: function(context: { chart: any; }) {
                         const chart = context.chart;
                         const {ctx, chartArea} = chart;
@@ -64,18 +60,22 @@ export class WeeklyComponent {
                     },
                     borderColor: function(context: { chart: any; }) {
                         const chart = context.chart;
-                        const {ctx, chartArea} = chart;
-                
+                        const {ctx, chartArea} = chart;                
                         if (!chartArea) {
-                          // This case happens on initial chart load
                           return;
                         }
                         return getGradient(ctx, chartArea, true);
                     },
                     borderWidth: 3
-                }
-            ]
-        };
+                    }
+                ]
+            };
+            },
+            error => {
+            console.error("Error!", error);
+            }
+        ); 
+
         this.height = (this.getScreenSize().height / 100) * 40;
         this.basicOptions = {
             responsive: false,
@@ -127,8 +127,6 @@ export class WeeklyComponent {
     ngAfterViewInit() {
         const duration = 2000; 
         const startTime = Date.now();
-
-
         const animate = () => {
           const elapsed = Date.now() - startTime;
           const t = Math.min(1, elapsed / duration);  
@@ -182,13 +180,6 @@ export class WeeklyComponent {
 
 }
 
-
-
-
-function getRandomFloat(min: number, max: number): number {
-    return Math.random() * (max - min) + min;
-}
-
 let width: number, height: number;
 function getGradient(ctx: CanvasRenderingContext2D, chartArea: { left: number, right: number, top: number, bottom: number },border:boolean): CanvasGradient {
     let gradient: CanvasGradient | null = null;
@@ -220,8 +211,6 @@ function getGradient(ctx: CanvasRenderingContext2D, chartArea: { left: number, r
     return gradient;
 }
 
-
-
 function easeInOutSine(x: number): number {
     return -(Math.cos(Math.PI * x) - 1) / 2;
   }
@@ -241,4 +230,16 @@ function easeInOutSine(x: number): number {
     return listDay;
 }
 
+function average_calculation(list_percent:any): any {
+    //In order from the old day to the new
+    let final_list = []
+    for(let i = 0;i<7;i++){
+        let sum = 0
+        for(let j = 1;j<=3;j++){
+            sum = sum + list_percent[j][i]
+        }
+        final_list.push(Math.ceil(sum/3))
+    }
+    return final_list
+}
 

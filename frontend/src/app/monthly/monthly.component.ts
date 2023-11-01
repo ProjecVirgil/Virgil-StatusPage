@@ -1,5 +1,5 @@
-import { Component,Renderer2 } from '@angular/core';
-import { Chart, LegendItem } from 'chart.js';
+import { Component } from '@angular/core';
+import { DataService } from '../data.service';
 
 
 @Component({
@@ -11,20 +11,38 @@ export class MonthlyComponent {
   basicData: any;
   basicOptions: any;
 
+  items: any = []
+
+
   uptime_ds:number = 0
   uptime_website:number = 0
   uptime_api:number = 0
   
+
+  value_api:number | undefined
+  value_website:number | undefined
+  value_ds:number | undefined
+
   width:number | undefined
   height:number | undefined
 
-  constructor(private renderer: Renderer2) { }
+  average_value_service = [];
+
+  constructor(private service:DataService ) {}
 
   ngOnInit() {
       const documentStyle = getComputedStyle(document.documentElement);
       const textColor = documentStyle.getPropertyValue('--text-color');
       const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
       const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    
+      this.service.getYear().subscribe(
+        (data:any) => {
+          this.items = Object.keys(data).map((key) => {return data[key]});  // Qui dovresti vedere i dati JSON restituiti dal tuo endpoint
+          this.value_website = (this.items[0][1].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][1].length);
+          this.value_ds = (this.items[0][2].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][2].length);
+          this.value_api = (this.items[0][3].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][3].length);
+          this.average_value_service = average_calculation(this.items[0])
 
       this.basicData = {
           labels: ['January', 'Febraury','March', 'April', 'May','June','July','August','September','October','November','December'],
@@ -32,7 +50,7 @@ export class MonthlyComponent {
               {
                   tension: 0.3,
                   label: 'Uptime in %',
-                  data: [getRandomFloat(0.0,100.0), getRandomFloat(0.0,100.0), getRandomFloat(0.0,100.0), getRandomFloat(0.0,100.0),getRandomFloat(0.0,100.0), getRandomFloat(0.0,100.0), getRandomFloat(0.0,100.0),getRandomFloat(0.0,100.0),getRandomFloat(0.0,100.0),getRandomFloat(0.0,100.0),getRandomFloat(0.0,100.0),getRandomFloat(0.0,100.0)],
+                  data: this.average_value_service,
                   borderColor: function(context: { chart: any; }) {
                     const chart = context.chart;
                     const {ctx, chartArea} = chart;
@@ -47,7 +65,11 @@ export class MonthlyComponent {
               }
           ]
       };
-      
+    },
+    error => {
+    console.error("Error!", error);
+    }
+); 
       this.height = (this.getScreenSize().height / 100) * 40;
       this.basicOptions = {
         responsive: true,
@@ -106,17 +128,14 @@ export class MonthlyComponent {
 ngAfterViewInit() {
     const duration = 2000; 
     const startTime = Date.now();
-    const value_api = getRandomFloat(0.0, 100.0)
-    const value_ds = getRandomFloat(0.0, 100.0)
-    const value_website = getRandomFloat(0.0, 100.0)
 
     const animate = () => {
       const elapsed = Date.now() - startTime;
       const t = Math.min(1, elapsed / duration);  
   
-      this.uptime_api = Math.ceil(value_api * easeInOutSine(t)); 
-      this.uptime_ds = Math.ceil(value_ds * easeInOutSine(t)); 
-      this.uptime_website = Math.ceil(value_website * easeInOutSine(t)); 
+      this.uptime_api = Math.ceil(this.value_api! * easeInOutSine(t)); 
+      this.uptime_ds = Math.ceil(this.value_ds! * easeInOutSine(t)); 
+      this.uptime_website = Math.ceil(this.value_website! * easeInOutSine(t)); 
       
       if (t < 1) {
         requestAnimationFrame(animate);
@@ -191,3 +210,17 @@ function getGradient(ctx: CanvasRenderingContext2D, chartArea: { left: number, r
 function easeInOutSine(x: number): number {
     return -(Math.cos(Math.PI * x) - 1) / 2;
   }
+
+
+function average_calculation(list_percent:any): any {
+    //In order from the old day to the new
+    let final_list = []
+    for(let i = 0;i<12;i++){
+        let sum = 0
+        for(let j = 1;j<=3;j++){
+            sum = sum + list_percent[j][i]
+        }
+        final_list.push(Math.ceil(sum/3))
+    }
+    return final_list
+}
