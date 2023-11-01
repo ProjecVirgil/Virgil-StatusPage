@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mainapp.apps.MainappConfig',
     'rest_framework',
+    'corsheaders' #! ONLY DEV
 ]
 
 MIDDLEWARE = [
@@ -49,9 +49,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware', #! ONLY DEV
 ]
 
 ROOT_URLCONF = 'status_page.urls'
+
+#! CORS CONFIG ONLY DEVELOPING
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",  # Angular default port
+]
 
 TEMPLATES = [
     {
