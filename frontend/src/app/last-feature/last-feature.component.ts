@@ -20,7 +20,7 @@ interface EventItem {
 
 
 export class LastFeatureComponent {
-  events:EventItem[] | undefined;
+  events: EventItem[] = [];
   items:any = [];
 
 
@@ -66,26 +66,20 @@ random_color(){
   return '#' + hexString
 }
 
-constructor(private service:DataService ){
-    service.getFeature().subscribe( 
-        (data:any) => {
-          this.items = Object.keys(data).map((key) => {return data[key]});
-          console.log(this.items)  
-             
-          const imageUrl= ['data:image/png;base64,' + this.items[0]['image'],'data:image/png;base64,' + this.items[1]['image'], 'data:image/png;base64,' + this.items[2]['image']];
-              
-          this.events = [
-                { title: this.items[0]['title'], date: this.items[0]['date'], color: this.random_color(), image: imageUrl[0] , description:this.items[0]['description'] },
-                { title: this.items[1]['title'], date:  this.items[1]['date'], color: this.random_color(), image:imageUrl[1] ,description: this.items[1]['description'] },
-                { title: this.items[2]['title'], date:  this.items[2]['date'], color: this.random_color(), image:imageUrl[2] ,description:this.items[2]['description'] },  
-              ];
-          }
-        )
-    }   
+constructor(private service: DataService) {
+  this.service.getFeature().subscribe((data: any) => {
+      this.items = Object.values(data);
+      console.log(this.items);
+
+      this.events = this.items.map((item: any) => ({
+          title: item['title'],
+          date: item['date'],
+          color: this.random_color(),
+          image: 'data:image/png;base64,' + item['image'],
+          description: item['description']
+      }));
+  });
 }
-  
-  
-
-
+}
   
   
