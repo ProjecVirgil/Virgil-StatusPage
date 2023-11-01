@@ -8,12 +8,16 @@ import { Observable } from 'rxjs';
 })
 export class DataService {
 
-  private apiUrl = 'https://api.miosito.com/dati';
+  private apiUrl = 'http://127.0.0.1:8000/api/status/';
 
   constructor(private http: HttpClient) { }
 
-  fetchData(): Observable<any> {
-    return this.http.get(this.apiUrl);
+  getWeek(){
+    return this.http.get(this.apiUrl + "7");
+  }
+
+  getYear(){
+    return this.http.get(this.apiUrl + "12");
   }
 
 }

@@ -1,5 +1,5 @@
 import requests
-from datetime import datetime,date
+from datetime import datetime,date,timedelta
 
 from .models import ItemStatus
 
@@ -45,47 +45,52 @@ def create_data(urs_service,id):
     }
     return data
 
-def recover_last_day():
-    """Recover the last seven day from today.
+def recover_last_seven_days():
+    """Recover the last seven days from today.
 
     Returns:
-        list: last seven day
+        list: last seven days
     """
-    today = int(str(date.today()).split("-")[-1])
-    list_day  = []
-    for i in range(6,-1,-1):
-        list_day.append(today - i)
-    return list_day
+    today = date.today()
+    last_seven_days = [(today - timedelta(days=i)).day for i in range(7)]
+    last_seven_days.reverse()
+    return last_seven_days
 
 def recover_last_day_percent(service_id):
     """Recover the last seven percent from today."""
-    list_day = recover_last_day()
+    list_day = recover_last_seven_days()
     item_statuses = ItemStatus.objects.filter(day__in=list_day,service=service_id)
     sorted_items = sorted(item_statuses, key=lambda item_statuses: item_statuses.day)
-
     hashmap = {}
+    for day in list_day:
+        hashmap[day] = []
     for _,item in enumerate(sorted_items):
-        if(item.day not in hashmap):
-            hashmap[item.day] = []
         hashmap[item.day].append(item.status)
-
     result_list = []
+    hashmap = {key: hashmap[key] for key in list_day if key in hashmap}
     for _,value in hashmap.items():
-        result_list.append(int((sum(value)/len(value))*100))
-    # Convert the QuerySet to a list of actual objects
+        try:
+            result_list.append(int((sum(value)/len(value))*100))
+        except ZeroDivisionError:
+            result_list.append(0)
     return result_list
 
 def recover_last_month_percent(service_id):
     """Recover the last month from today."""
+    list_month = [1,2,3,4,5,6,7,8,9,10,11,12]
     item_statuses = ItemStatus.objects.filter(month__lte=12,service=service_id)
     sorted_items = sorted(item_statuses, key=lambda item_statuses: item_statuses.month)
     hashmap = {}
+    for month in list_month:
+        hashmap[month] = []
     for _,item in enumerate(sorted_items):
-        if(item.month not in hashmap):
-            hashmap[item.month] = []
         hashmap[item.month].append(item.status)
     result_list = []
+    hashmap = {key: hashmap[key] for key in list_month if key in hashmap}
     for _,value in hashmap.items():
-        result_list.append(int((sum(value)/len(value))*100))
+        try:
+            result_list.append(int((sum(value)/len(value))*100))
+        except ZeroDivisionError:
+            result_list.append(0)
     return result_list
 
