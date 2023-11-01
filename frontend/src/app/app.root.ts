@@ -1,4 +1,4 @@
-import { Component ,OnInit ,AfterViewInit } from '@angular/core';
+import { Component ,OnInit} from '@angular/core';
 import {PrimeNGConfig } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 

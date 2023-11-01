@@ -14,9 +14,9 @@ export class MonthlyComponent {
   items: any = []
 
 
-  uptime_ds:number = 0
-  uptime_website:number = 0
-  uptime_api:number = 0
+  uptime_ds = 0
+  uptime_website = 0
+  uptime_api = 0
   
 
   value_api:number | undefined
@@ -181,11 +181,6 @@ ngAfterViewInit() {
     }
 }
 
-function getRandomFloat(min: number, max: number): number {
-  return Math.random() * (max - min) + min;
-}
-
-
 let width: number, height: number;
 let gradient: CanvasGradient | null = null;
 
@@ -214,7 +209,7 @@ function easeInOutSine(x: number): number {
 
 function average_calculation(list_percent:any): any {
     //In order from the old day to the new
-    let final_list = []
+    const final_list = []
     for(let i = 0;i<12;i++){
         let sum = 0
         for(let j = 1;j<=3;j++){

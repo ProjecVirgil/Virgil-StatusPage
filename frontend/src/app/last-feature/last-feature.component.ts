@@ -62,7 +62,7 @@ export class LastFeatureComponent {
 
 random_color(){
   const number_dec = Math.ceil(Math.random() * (16777215 - 0) + 0);
-  let hexString: string = number_dec.toString(16).padStart(6,'0').toUpperCase();
+  const hexString: string = number_dec.toString(16).padStart(6,'0').toUpperCase();
   return '#' + hexString
 }
 
@@ -72,7 +72,7 @@ constructor(private service:DataService ){
           this.items = Object.keys(data).map((key) => {return data[key]});
           console.log(this.items)  
              
-          let imageUrl= ['data:image/png;base64,' + this.items[0]['image'],'data:image/png;base64,' + this.items[1]['image'], 'data:image/png;base64,' + this.items[2]['image']];
+          const imageUrl= ['data:image/png;base64,' + this.items[0]['image'],'data:image/png;base64,' + this.items[1]['image'], 'data:image/png;base64,' + this.items[2]['image']];
               
           this.events = [
                 { title: this.items[0]['title'], date: this.items[0]['date'], color: this.random_color(), image: imageUrl[0] , description:this.items[0]['description'] },

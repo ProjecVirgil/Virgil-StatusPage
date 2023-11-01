@@ -10,9 +10,9 @@ export class WeeklyComponent {
     basicData: any;
     basicOptions: any;
 
-    uptime_ds:number = 0
-    uptime_website:number = 0
-    uptime_api:number = 0
+    uptime_ds = 0
+    uptime_website = 0
+    uptime_api = 0
     
     items: any = []
 
@@ -217,7 +217,7 @@ function easeInOutSine(x: number): number {
 
   function recoverLastDay(): number[] {
     // Ottieni la data odierna
-    let currentDay = new Date();
+    const currentDay = new Date();
 
     const listDay: number[] = [];
 
@@ -232,7 +232,7 @@ function easeInOutSine(x: number): number {
 
 function average_calculation(list_percent:any): any {
     //In order from the old day to the new
-    let final_list = []
+    const final_list = []
     for(let i = 0;i<7;i++){
         let sum = 0
         for(let j = 1;j<=3;j++){

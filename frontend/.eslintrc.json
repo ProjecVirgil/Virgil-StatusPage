@@ -28,7 +28,7 @@
           {
             "type": "element",
             "prefix": "app",
-            "style": "snake-case"
+            "style": "camelCase"
           }
         ]
       }

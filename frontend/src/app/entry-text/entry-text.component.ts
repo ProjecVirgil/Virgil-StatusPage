@@ -8,7 +8,7 @@ import { scroll, animate } from "motion"
 })
 export class EntryTextComponent {
 
-  text_dimension:String = String((this.getScreenSize().width/100)*15) + "px";  
+  text_dimension:string = String((this.getScreenSize().width/100)*15) + "px";  
 
   ngAfterViewInit(){
     //init animation

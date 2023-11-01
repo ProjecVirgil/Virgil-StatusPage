@@ -64,12 +64,12 @@ export class NavbarComponent {
       {
         label : 'Last feature',
         icon : 'pi pi-fw pi-list',
-        command: (event) => this.scrollDown(120)
+        command: () => this.scrollDown(120)
       },
       {
         label : 'FAQ',
         icon : 'pi pi-fw pi-cloud',
-        command: (event) => this.scrollDown(600) 
+        command: () => this.scrollDown(600) 
       },
       {
         label: 'Explore',
