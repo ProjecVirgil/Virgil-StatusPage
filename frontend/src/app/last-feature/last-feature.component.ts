@@ -1,5 +1,7 @@
 import { Component ,ViewChild,ElementRef} from '@angular/core';
 import { animate} from 'motion';
+import { DataService } from '../data.service';
+
 
 interface EventItem {
   title?: string;
@@ -18,8 +20,8 @@ interface EventItem {
 
 
 export class LastFeatureComponent {
-  events:EventItem[];
-  
+  events:EventItem[] | undefined;
+  items:any = [];
 
 
   @ViewChild('container_title') container_title!: ElementRef;
@@ -58,17 +60,32 @@ export class LastFeatureComponent {
   observer.observe(this.container_title.nativeElement);
 }
 
-  constructor() {
-      this.events = [
-        { title: 'Alessia SARTORI', date: '15/10/2020 10:30', color: this.random_color(), image: 'https://i.pinimg.com/564x/2f/cd/49/2fcd497522335c1d716284a181c4ea09.jpg',description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Et odio pellentesque diam volutpat commodo sed egestas egestas fringilla. Tempus urna et pharetra pharetra. Et netus et malesuada fames ac turpis egestas sed. Odio pellentesque diam volutpat commodo sed. Urna et pharetra pharetra massa massa ultricies mi quis. Mollis aliquam ut porttitor leo a diam sollicitudin. Eu scelerisque felis imperdiet proin fermentum leo vel orci porta. Morbi tristique senectus et netus. Justo nec ultrices dui sapien eget mi proin. Odio facilisis mauris sit amet massa vitae tortor condimentum. Vel elit scelerisque mauris pellentesque pulvinar pellentesque." },
-        { title: 'Novità 2', date: '15/11/2020 8:20', color: this.random_color(), image: 'https://i.pinimg.com/564x/8d/1c/10/8d1c108cb776c644a145702f0541925d.jpg',description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Et odio pellentesque diam volutpat commodo sed egestas egestas fringilla. Tempus urna et pharetra pharetra. Et netus et malesuada fames ac turpis egestas sed. Odio pellentesque diam volutpat commodo sed. Urna et pharetra pharetra massa massa ultricies mi quis. Mollis aliquam ut porttitor leo a diam sollicitudin. Eu scelerisque felis imperdiet proin fermentum leo vel orci porta. Morbi tristique senectus et netus. Justo nec ultrices dui sapien eget mi proin. Odio facilisis mauris sit amet massa vitae " },
-        { title: 'Novità 3', date: '16/10/2024 11:30', color: this.random_color(), image: 'https://i.pinimg.com/564x/d0/f4/c6/d0f4c62350bff9e1586e628a35253381.jpg',description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Et odio pellentesque diam volutpat commodo sed egestas egestas fringilla. Tempus urna et pharetra pharetra. Et netus et malesuada fames ac turpis egestas sed. Odio pellentesque diam volutpat commodo sed. Urna et pharetra pharetra massa massa ultricies mi quis. Mollis aliquam ut porttitor leo a diam sollicitudin. Eu scelerisque felis imperdiet proin fermentum leo vel orci porta. Morbi tristique senectus et netus. Justo nec ultrices dui sapien eget mi proin" },
-    ];
-
-  }
-  random_color(){
-    const number_dec = Math.ceil(Math.random() * (16777215 - 0) + 0);
-    let hexString: string = number_dec.toString(16).padStart(6,'0').toUpperCase();
-    return '#' + hexString
-  }
+random_color(){
+  const number_dec = Math.ceil(Math.random() * (16777215 - 0) + 0);
+  let hexString: string = number_dec.toString(16).padStart(6,'0').toUpperCase();
+  return '#' + hexString
 }
+
+constructor(private service:DataService ){
+    service.getFeature().subscribe( 
+        (data:any) => {
+          this.items = Object.keys(data).map((key) => {return data[key]});
+          console.log(this.items)  
+             
+          let imageUrl= ['data:image/png;base64,' + this.items[0]['image'],'data:image/png;base64,' + this.items[1]['image'], 'data:image/png;base64,' + this.items[2]['image']];
+              
+          this.events = [
+                { title: this.items[0]['title'], date: this.items[0]['date'], color: this.random_color(), image: imageUrl[0] , description:this.items[0]['description'] },
+                { title: this.items[1]['title'], date:  this.items[1]['date'], color: this.random_color(), image:imageUrl[1] ,description: this.items[1]['description'] },
+                { title: this.items[2]['title'], date:  this.items[2]['date'], color: this.random_color(), image:imageUrl[2] ,description:this.items[2]['description'] },  
+              ];
+          }
+        )
+    }   
+}
+  
+  
+
+
+  
+  
