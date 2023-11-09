@@ -1,6 +1,7 @@
 import { Component ,ViewChild,ElementRef} from '@angular/core';
 import { animate} from 'motion';
 import { DataService } from '../data.service';
+import { format, parseISO } from 'date-fns';
 
 
 interface EventItem {
@@ -69,17 +70,21 @@ random_color(){
 constructor(private service: DataService) {
   this.service.getFeature().subscribe((data: any) => {
       this.items = Object.values(data);
-      console.log(this.items);
-
       this.events = this.items.map((item: any) => ({
           title: item['title'],
-          date: item['date'],
+          date: parse_date(item['date']),
           color: this.random_color(),
           image: 'data:image/png;base64,' + item['image'],
           description: item['description']
       }));
   });
 }
+}
+
+
+function parse_date(dateString:string){
+  const date = parseISO(dateString);
+  return format(date, 'yyyy/MM/dd - HH:mm');
 }
   
   

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders  } from '@angular/common/http';
 
 
 @Injectable({
@@ -7,20 +7,28 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DataService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api/';
+  private apiUrl = 'https://api.projectvirgil.net/api/';
 
   constructor(private http: HttpClient) { }
 
-  getWeek(){
-    return this.http.get(this.apiUrl + "status/7");
+  private headers = new HttpHeaders({
+    'Authorization': 'SECRET TOKEN'
+  });
+  
+  getWeek(){    
+    return this.http.get(this.apiUrl + "status/7",{ headers: this.headers });
   }
 
   getYear(){
-    return this.http.get(this.apiUrl + "status/12");
+    return this.http.get(this.apiUrl + "status/12",{ headers: this.headers });
   }
 
   getFeature(){
-    return this.http.get(this.apiUrl + "feature/");
+    return this.http.get(this.apiUrl + "feature/",{ headers: this.headers });
+  }
+
+  getService(){
+    return this.http.get(this.apiUrl + "service/",{ headers: this.headers });
   }
 }
 

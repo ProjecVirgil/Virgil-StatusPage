@@ -8,27 +8,33 @@ import { DataService } from '../data.service';
   styleUrls: ['./monthly.component.css']
 })
 export class MonthlyComponent {
-  basicData: any;
-  basicOptions: any;
+    basicData: any;
+    basicOptions: any;
+    
+    list_service_avaible:any = []
+    uptimes: { [key: string]: number } = {};
+    
+    list_uptime_value:any = {}
 
-  items: any = []
+    items: any = []
+
+    width:number | undefined
+    height:number | undefined
+
+    average_value_service = [];
 
 
-  uptime_ds = 0
-  uptime_website = 0
-  uptime_api = 0
-  
-
-  value_api:number | undefined
-  value_website:number | undefined
-  value_ds:number | undefined
-
-  width:number | undefined
-  height:number | undefined
-
-  average_value_service = [];
-
-  constructor(private service:DataService ) {}
+    constructor(private service:DataService ) {
+        this.service.getService().subscribe(
+            (data: any) => {
+                this.list_service_avaible = Object.keys(data).map((key) => data[key]);
+                // Inizializza la mappa di uptime con i nomi dei servizi
+                this.list_service_avaible.forEach((service: { name: string | number; }) => {
+                    this.uptimes[service.name] = 0;
+                });
+            }
+        );
+    }
 
   ngOnInit() {
       const documentStyle = getComputedStyle(document.documentElement);
@@ -38,11 +44,12 @@ export class MonthlyComponent {
     
       this.service.getYear().subscribe(
         (data:any) => {
-          this.items = Object.keys(data).map((key) => {return data[key]});  // Qui dovresti vedere i dati JSON restituiti dal tuo endpoint
-          this.value_website = (this.items[0][1].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][1].length);
-          this.value_ds = (this.items[0][2].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][2].length);
-          this.value_api = (this.items[0][3].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / this.items[0][3].length);
-          this.average_value_service = average_calculation(this.items[0])
+          this.items = data["result"];  // Qui dovresti vedere i dati JSON restituiti dal tuo endpoint
+          const size = Object.keys(this.items).length;
+          for(let i = 1;i<=size;i++){
+            this.list_uptime_value[i]=this.items[i].reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) / 12
+          }
+          this.average_value_service = average_calculation(this.items)
 
       this.basicData = {
           labels: ['January', 'Febraury','March', 'April', 'May','June','July','August','September','October','November','December'],
@@ -128,36 +135,28 @@ export class MonthlyComponent {
 ngAfterViewInit() {
     const duration = 2000; 
     const startTime = Date.now();
-
     const animate = () => {
       const elapsed = Date.now() - startTime;
-      const t = Math.min(1, elapsed / duration);  
-  
-      this.uptime_api = Math.ceil(this.value_api! * easeInOutSine(t)); 
-      this.uptime_ds = Math.ceil(this.value_ds! * easeInOutSine(t)); 
-      this.uptime_website = Math.ceil(this.value_website! * easeInOutSine(t)); 
-      
+      const t = Math.min(1, elapsed / duration);
+
+      Object.keys(this.list_uptime_value).forEach((key) => {
+        const serviceValue = this.list_uptime_value[key];
+        if (typeof serviceValue === 'number') {
+            this.uptimes[key] = Math.ceil(serviceValue * easeInOutSine(t));
+        }
+      });
+
       if (t < 1) {
         requestAnimationFrame(animate);
       }
     };
-  
+
     requestAnimationFrame(animate);
   }
 
-  takeElement(element: HTMLElement): string {
-      // Usa l'elemento come desideri, ad esempio:
-      const element_type = element.getAttribute('data-ref');
-      if(element_type == 'api'){
-          return this.getColor(this.uptime_api)
-      }
-      else if(element_type == 'website'){
-          return this.getColor(this.uptime_website)
-      }
-      else{
-          return this.getColor(this.uptime_ds)
-      }
-    }
+  takeElement(percent: number): string {
+    return this.getColor(percent);
+}
 
   getColor(uptime:number): string {
       if(uptime > 80){
@@ -207,15 +206,16 @@ function easeInOutSine(x: number): number {
   }
 
 
-function average_calculation(list_percent:any): any {
+  function average_calculation(list_percent:any): any {
     //In order from the old day to the new
+    const size = Object.keys(list_percent).length;
     const final_list = []
     for(let i = 0;i<12;i++){
         let sum = 0
-        for(let j = 1;j<=3;j++){
+        for(let j = 1;j<=size;j++){
             sum = sum + list_percent[j][i]
         }
-        final_list.push(Math.ceil(sum/3))
+        final_list.push(Math.ceil(sum/size))
     }
     return final_list
 }
