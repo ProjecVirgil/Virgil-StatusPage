@@ -1,6 +1,9 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
+  "cli" : {
+    "packageManager": "npm"
+  },
   "newProjectRoot": "projects",
   "projects": {
     "Status-Page": {
@@ -38,14 +41,9 @@
             "production": {
               "budgets": [
                 {
-                  "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                "type": "initial",
+                "maximumWarning": "2mb",
+                "maximumError": "5mb"
                 }
               ],
               "outputHashing": "all"

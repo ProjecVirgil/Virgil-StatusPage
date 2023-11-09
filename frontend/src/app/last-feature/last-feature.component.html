@@ -6,7 +6,7 @@
         </ng-template>
         <ng-template pTemplate="content" let-event>
             <p-card  [style]="{'background-color':'transparent','box-shadow':'none'}" [header]="event.title" [subheader]="event.date">
-                <img *ngIf="event.image" [src]="event.image" [alt]="event.name" width="400" class="shadow" />
+                <img *ngIf="event.image" [src]="event.image" [alt]="event.name" width="60%" class="shadow" />
                 <p style="font-size: 18px;">
                     {{event.description}}
                 </p>
