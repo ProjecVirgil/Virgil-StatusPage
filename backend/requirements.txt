@@ -2,7 +2,7 @@ asgiref==3.7.2
 configparser==6.0.0
 Django==4.2.7
 sqlparse==0.4.4
-tzdata==2023.3
+tzdata==2023.4
 djangorestframework==3.14.0
 requests==2.31.0
 Pillow==10.1.0
